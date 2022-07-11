@@ -9,6 +9,7 @@ _ext
 build/
 dist/
 wheels/
+data/
 
 # pytorch/python/numpy formats
 *.pth
