@@ -1,5 +1,5 @@
 DIR: 
-  dataset: "DIR_OF_FSC147_DATASET" # Remeber to download and place the generated txt file for dataset splitation! 
+  dataset: "data" # Remeber to download and place the generated txt file for dataset splitation! 
   exp: "bmnet+_pretrained" # If you unzip the provided checkpoints, the name of the folder containing pth file will be "bmnet+_pretrained".
                            # If you modify the folder name, set exp to the new folder name. If you want to test a trained model with our
                            # training code, set the corresponding exp name and snapshot directory. Model configuration shall be kept the same.
@@ -7,9 +7,9 @@ DIR:
 
 DATASET:
   name: "FSC147"
-  list_train: "DIR_OF_FSC147_DATASET/train.txt" 
-  list_val: "DIR_OF_FSC147_DATASET/val.txt"
-  list_test: "DIR_OF_FSC147_DATASET/test.txt" # If you want to evaluate model on validation set, modify "test.txt" to "val.txt".
+  list_train: "data/train.txt" 
+  list_val: "data/val.txt"
+  list_test: "data/test.txt" # If you want to evaluate model on validation set, modify "test.txt" to "val.txt".
   exemplar_number: 3
   downsampling_rate: 1
 
@@ -40,9 +40,9 @@ TRAIN:
   contrast_loss: "info_nce"
   contrast_weight: 5e-6
   optimizer: "AdamW"
-  device: "cuda:0"
+  device: "cpu" # cpu only when running locally 
   batch_size: 8
-  epochs: 300
+  epochs: 1 
   lr_backbone: 1e-5
   lr: 1e-5
   lr_drop: 300 # We do not modify learning rate.
@@ -55,5 +55,5 @@ TRAIN:
 VAL:
   evaluate_only: True
   resume: "model_best.pth"
-  visualization: False
+  visualization: False 
 
