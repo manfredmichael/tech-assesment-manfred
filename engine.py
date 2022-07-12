@@ -22,6 +22,9 @@ def train(model, data_loader):
     with mlflow.start_run() as run:
         trainer.fit(model, data_loader)
 
+        print('artifact_uri:', mlflow.get_artifact_uri())
+        print('run ID:', run.info.run_uuid)
+
 
 
 
