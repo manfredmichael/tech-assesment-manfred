@@ -10,6 +10,7 @@ build/
 dist/
 wheels/
 data/
+mlruns/
 
 # pytorch/python/numpy formats
 *.pth
