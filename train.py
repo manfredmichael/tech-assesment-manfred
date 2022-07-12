@@ -17,7 +17,7 @@ from config import cfg
 import util.misc as utils
 from loss import get_loss
 from FSC147_dataset import build_dataset, batch_collate_fn 
-from engine import evaluate, train_one_epoch, visualization 
+from engine import evaluate, train_one_epoch, visualization, train
 from models import build_model
 
 import matplotlib.pyplot as plt
@@ -32,9 +32,9 @@ def main(args):
     np.random.seed(seed)
     random.seed(seed)
 
-    model = build_model(cfg)
     criterion = get_loss(cfg)
     criterion.to(device)
+    model = build_model(cfg, criterion, device)
     model.to(device)
 
     n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -72,16 +72,22 @@ def main(args):
     val_mae_list = []
     
     if cfg.VAL.evaluate_only:
+        print('evaluating!!!')
         if os.path.isfile(cfg.VAL.resume):
+            print('loading model')
             checkpoint = torch.load(cfg.VAL.resume, map_location='cpu')
             model.load_state_dict(checkpoint['model'])
+            print('model loaded successfully')
         else:
             print('model state dict not found.')
         if cfg.VAL.visualization:
+            print('calling visualization')
             mae = visualization(cfg, model, dataset_val, data_loader_val, device, cfg.DIR.output_dir)
         else:
+            print('calling evaluate')
             mae = evaluate(model, data_loader_val, device, cfg.DIR.output_dir)
         return
+    print('continuing to train!!!')
     
     if os.path.isfile(cfg.TRAIN.resume):
         if cfg.TRAIN.resume.startswith('https'):
@@ -102,7 +108,19 @@ def main(args):
     
     print("Start training")
     start_time = time.time()
-    
+
+    print('training')
+    print('training')
+    print('training')
+
+    train(model, data_loader_train)
+   
+    print('training over!!!')
+    print('training over!!!')
+    print('training over!!!')
+
+    return 
+
     for epoch in range(cfg.TRAIN.start_epoch, cfg.TRAIN.epochs):
         loss = train_one_epoch(
             model, criterion, data_loader_train, optimizer, device, epoch,
