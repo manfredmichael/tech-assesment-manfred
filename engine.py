@@ -9,10 +9,24 @@ from PIL import Image
 import numpy as np
 
 import torch
+import pytorch_lightning as pl
+import mlflow.pytorch
+from mlflow.tracking import MlflowClient
+
+
+def train(model, data_loader):
+    trainer = pl.Trainer(max_epochs=300, progress_bar_refresh_rate=20)
+
+    mlflow.pytorch.autolog()
+
+    with mlflow.start_run() as run:
+        trainer.fit(model, data_loader)
+
+
+
 
 def train_one_epoch(model: torch.nn.Module, criterion: torch.nn.Module,
-                    data_loader: Iterable, optimizer: torch.optim.Optimizer,
-                    device: torch.device, epoch: int, max_norm: float = 0):
+                    data_loader: Iterable, optimizer: torch.optim.Optimizer, device: torch.device, epoch: int, max_norm: float = 0):
     model.train()
     criterion.train()
     loss_sum = 0
@@ -60,6 +74,35 @@ def train_one_epoch(model: torch.nn.Module, criterion: torch.nn.Module,
     return loss_sum / len(data_loader)
 
 @torch.no_grad()
+def infernce(model, data_loader, device, output_dir, filename):
+    mae = 0
+    mse = 0
+    model.eval()
+    for idx, sample in enumerate(data_loader):
+        img, patches, targets = sample
+        img = img.to(device)
+        patches['patches'] = patches['patches'].to(device)
+        patches['scale_embedding'] = patches['scale_embedding'].to(device)
+        gtcount = targets['gtcount']
+        with torch.no_grad():
+            outputs = model(img, patches, is_train=False)
+        error = torch.abs(outputs.sum() - gtcount.item()).item()
+        print('outputs', outputs.sum())
+        print('ground truth', gtcount.item())
+        mae += error
+        mse += error ** 2
+        
+    mae = mae / len(data_loader)
+    mse = mse / len(data_loader)
+    mse = mse ** 0.5
+    
+    with open(os.path.join(output_dir, 'result.txt'), 'a') as f:
+        f.write('MAE %.2f, MSE %.2f \n'%(mae, mse))
+    print('MAE %.2f, MSE %.2f \n'%(mae, mse))
+
+    return mae, mse
+
+@torch.no_grad()
 def evaluate(model, data_loader, device, output_dir):
     mae = 0
     mse = 0
@@ -73,6 +116,8 @@ def evaluate(model, data_loader, device, output_dir):
         with torch.no_grad():
             outputs = model(img, patches, is_train=False)
         error = torch.abs(outputs.sum() - gtcount.item()).item()
+        print('outputs', outputs.sum())
+        print('ground truth', gtcount.item())
         mae += error
         mse += error ** 2
         
@@ -89,10 +134,12 @@ def evaluate(model, data_loader, device, output_dir):
 @torch.no_grad()
 def visualization(cfg, model, dataset, data_loader, device, output_dir):
     import matplotlib.pyplot as plt
+    print('switching bakcend..')
     plt.switch_backend('agg')
 
     cmap = plt.cm.get_cmap('jet')
     visualization_dir = os.path.join(output_dir, 'visualizations')
+    print('creating visualization directory..')
     if not os.path.exists(visualization_dir):
         os.mkdir(visualization_dir)
     
@@ -114,7 +161,7 @@ def visualization(cfg, model, dataset, data_loader, device, output_dir):
 
         # read original image
         file_name = dataset.data_list[idx][0]
-        file_path = image_path = dataset.data_dir + 'images_384_VarV2/' + file_name
+        file_path = image_path = dataset.data_dir + '/images_384_VarV2/' + file_name
         origin_img = Image.open(file_path).convert("RGB")
         origin_img = np.array(origin_img)
         h, w, _ = origin_img.shape
