@@ -1,13 +1,13 @@
 DIR: 
-  dataset: "DIR_OF_FSC147_DATASET"
+  dataset: "data"
   exp: "bmnet+_ep3_epoch300"
-  snapshot: "DIR_FOR_YOUR_CHECKPOINTS"
+  snapshot: "./checkpoints"
 
 DATASET:
   name: "FSC147"
-  list_train: "DIR_OF_FSC147_DATASET/train.txt"
-  list_val: "DIR_OF_FSC147_DATASET/val.txt"
-  list_test: "DIR_OF_FSC147_DATASET/test.txt"
+  list_train: "data/train.txt"
+  list_val: "data/val.txt"
+  list_test: "data/test.txt"
   exemplar_number: 3
   downsampling_rate: 1
 
@@ -38,8 +38,8 @@ TRAIN:
   contrast_loss: "info_nce"
   contrast_weight: 5e-6
   optimizer: "AdamW"
-  device: "cuda:0"
-  batch_size: 8
+  device: "cpu" # cpu on local, cuda:0 on aws
+  batch_size: 2
   epochs: 300
   lr_backbone: 1e-5
   lr: 1e-5
