@@ -3,11 +3,13 @@ Basic class agnostic counting model with backbone, refiner, matcher and counter.
 """
 import torch
 from torch import nn
+import math
+import pytorch_lightning as pl
 
-class CACModel(nn.Module):
+class CACModel(pl.LightningModule):
     """ Class Agnostic Counting Model"""
     
-    def __init__(self, backbone, EPF_extractor, refiner, matcher, counter, hidden_dim):
+    def __init__(self, backbone, EPF_extractor, refiner, matcher, counter, hidden_dim, lr, decay, max_norm, criterion, device):
         """ Initializes the model.
         Parameters:
             backbone: torch module of the backbone to be used. See backbone.py
@@ -23,6 +25,11 @@ class CACModel(nn.Module):
         self.backbone = backbone
         self.hidden_dim = hidden_dim
         self.input_proj = nn.Conv2d(backbone.num_channels, hidden_dim, kernel_size=1)
+        self.lr = lr
+        self.decay = decay
+        self.device_ = device
+        self.max_norm = max_norm
+        self.criterion = criterion
         
     def forward(self, samples: torch.Tensor, patches: torch.Tensor, is_train: bool):
         """ The forward expects samples containing query images and corresponding exemplar patches.
@@ -64,3 +71,43 @@ class CACModel(nn.Module):
     #    for p in self.parameters():
     #        if p.dim() > 1:
     #            nn.init.xavier_uniform_(p)
+
+    def training_step(self, batch, batch_nb):
+        img, patches, targets = batch 
+        img = img.to(self.device_)
+        patches['patches'] = patches['patches'].to(self.device_)
+        patches['scale_embedding'] = patches['scale_embedding'].to(self.device_)
+        density_map = targets['density_map'].to(self.device_)
+        pt_map = targets['pt_map'].to(self.device_)
+
+        outputs = self(img, patches, is_train=True)
+
+        dest = outputs['density_map']
+        if batch_nb < 5: # check if training process get stucked in local optimal. 
+            print(dest.sum().item(), density_map.sum().item(), dest.sum().item()*10000 / (img.shape[-2] * img.shape[-1]))
+        counting_loss, contrast_loss = self.criterion(outputs, density_map, pt_map)
+        loss = counting_loss if isinstance(contrast_loss, int) else counting_loss + contrast_loss
+        
+        loss_value = loss.item()
+        
+        if not math.isfinite(loss_value):
+            return None
+            
+
+        if self.max_norm > 0:
+            torch.nn.utils.clip_grad_norm_(self.parameters(), self.max_norm)
+
+        return loss
+
+
+
+    def configure_optimizers(self):
+        param_dicts = [
+            {"params": [p for n, p in self.named_parameters() if "backbone" not in n and p.requires_grad]},
+            {
+                "params": [p for n, p in self.named_parameters() if "backbone" in n and p.requires_grad],
+                "lr": self.lr,
+            },
+        ]
+        optimizer = torch.optim.AdamW(param_dicts, lr=self.lr,
+                                      weight_decay=self.decay)
