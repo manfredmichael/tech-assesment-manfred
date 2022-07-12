@@ -97,6 +97,8 @@ class CACModel(pl.LightningModule):
         if self.max_norm > 0:
             torch.nn.utils.clip_grad_norm_(self.parameters(), self.max_norm)
 
+        self.log("train_loss", loss, on_epoch=True)
+
         return loss
 
 
