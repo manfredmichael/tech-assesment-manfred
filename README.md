@@ -49,13 +49,6 @@ Then run the command below.
 python3 deploy.py
 ```
 
-### TODO:
-* [x] Convert pytorch module into pytorch-lightning module
-* [x] Create model tracking script using mlflow
-* [x] Create model artifact using mlflow
-* [x] Build docker image from model artifact & push to AWS ECR
-* [ ] Deploy image & Create sagemaker endpoint
-
 
 *NOTE :* Unfortunately, only ml.t2.medium instance (least expensive one) is available in free tier sagemaker, which does not have the required memory to deploy this model. I have requested a limit increase for a bigger instance, but it could take days to get their approval.
 

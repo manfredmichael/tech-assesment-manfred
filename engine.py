@@ -15,15 +15,26 @@ from mlflow.tracking import MlflowClient
 
 
 def train(model, data_loader):
-    trainer = pl.Trainer(max_epochs=300, progress_bar_refresh_rate=20)
+    artifact_path = 'checkpoints/artifacts'
+    trainer = pl.Trainer(max_epochs=1, progress_bar_refresh_rate=20)
 
     mlflow.pytorch.autolog()
 
     with mlflow.start_run() as run:
         trainer.fit(model, data_loader)
 
+        mlflow.pytorch.log_state_dict(model.state_dict(), artifact_path)
+        state_dict_uri = mlflow.get_artifact_uri(artifact_path)
+
         print('artifact_uri:', mlflow.get_artifact_uri())
         print('run ID:', run.info.run_uuid)
+
+    print('loading state dict')
+
+    state_dict = mlflow.pytorch.load_state_dict(state_dict_uri)
+    model.load_state_dict(state_dict)
+
+    print('sucessfylly loaded state dict')
 
 
 

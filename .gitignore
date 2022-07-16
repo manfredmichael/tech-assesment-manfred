@@ -11,6 +11,12 @@ dist/
 wheels/
 data/
 mlruns/
+lightning_logs/
+server/checkpoints/*
+
+# keep directory structure 
+!server/checkpoints/.gitkeep
+
 
 # pytorch/python/numpy formats
 *.pth
