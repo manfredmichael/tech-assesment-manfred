@@ -12,7 +12,7 @@ import pandas as pd
 import streamlit as st
 from PIL import Image
 from streamlit_drawable_canvas import st_canvas
-from utils import transform_annotations, inference, transform_scale
+from utils import transform_annotations, inference, transform_scale, get_heatmap
 
 
 def main():
@@ -84,11 +84,17 @@ def color_annotation_app():
             with st.form("my_form"):
 
                 # Every form must have a submit button.
-                submitted = st.form_submit_button("Count objects")
-                if submitted:
+                count_button_clicked = st.form_submit_button("Count objects")
+                heatmap_button_clicked = st.form_submit_button("Show heatmaps")
+                if count_button_clicked:
                     annotations = transform_annotations(df)
                     prediction = inference(annotations)
                     st.write(prediction)
+                elif heatmap_button_clicked:
+                    annotations = transform_annotations(df)
+                    prediction, heatmap = get_heatmap(annotations)
+                    st.write(f"predicted count: {prediction}")
+                    st.image(heatmap)
 
 
         if len(df) == 0:
