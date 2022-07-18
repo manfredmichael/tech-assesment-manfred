@@ -28,6 +28,13 @@ def get_query_transforms(exemplar_size=(128, 128)):
                              std=[0.229, 0.224, 0.225])
     ])
 
+def get_heatmap(outputs):
+    std, mean = torch.std_mean(outputs)
+    return transforms.Compose([
+        transforms.Normalize(mean=mean.tolist(),
+                             std=std.tolist())
+    ])(outputs)
+
 class MainTransform(object):
     def __init__(self):
         self.img_trans = transforms.Compose([transforms.ToTensor(), transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
@@ -101,8 +108,11 @@ def predict(img, annotations, return_density_map=False):
     model.eval()
 
     outputs = model(img, patches, is_train=False)
+    heatmap = get_heatmap(outputs)
+    heatmap = torch.squeeze(heatmap) 
+
     if return_density_map:
-        return outputs.sum().tolist(), transforms.ToPILImage()(outputs)
+        return outputs.sum().tolist(), heatmap.tolist()
     return outputs.sum().tolist()
 
 if __name__ == '__main__':
