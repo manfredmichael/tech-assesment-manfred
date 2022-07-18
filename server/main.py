@@ -20,7 +20,7 @@ def evaluate_heatmap():
         file = request.files['file']
         annotations = json.load(request.files['data'])['annotations']
         image = Image.open(BytesIO(file.read()))
-        count, heatmap = predict(image, annotations, return_density_map)
+        count, heatmap = predict(image, annotations, return_density_map=True)
         return {'count': count, 'heatmap': heatmap} 
 
 if __name__ == "__main__":
