@@ -51,7 +51,7 @@ class MainTransform(object):
         
         return inputs
 
-def predict(img, annotations):
+def predict(img, annotations, return_density_map=False):
     w, h = img.size
     r = 1.0
     min_size = 384
@@ -101,6 +101,8 @@ def predict(img, annotations):
     model.eval()
 
     outputs = model(img, patches, is_train=False)
+    if return_density_map:
+        return outputs.sum().tolist(), transforms.ToPILImage()(outputs)
     return outputs.sum().tolist()
 
 if __name__ == '__main__':
