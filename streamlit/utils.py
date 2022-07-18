@@ -1,6 +1,11 @@
 import requests
 import json
 from PIL import Image
+from io import BytesIO, StringIO
+from base64 import decodebytes
+import numpy as np
+import cv2
+import matplotlib.pyplot as plt
 
 def transform_annotations(df):
     df['x1'] = df['left'] 
@@ -38,3 +43,22 @@ def inference(annotations):
 
     return result.json()
 
+def get_heatmap(annotations):
+    result = requests.post(
+        f"http://localhost:5000/heatmap",
+        files = {'file': open(f"img/annotation.jpeg", 'rb'),
+                 'data': json.dumps({'annotations': annotations})
+                },
+    )
+
+
+    heatmap = result.json()['heatmap']
+
+    heatmap = np.array(heatmap) * 0.1
+
+
+    colormap = plt.get_cmap('inferno')
+    heatmap = (colormap(heatmap)).astype(np.float32)[:,:,:3]
+
+
+    return result.json()['count'], heatmap 
