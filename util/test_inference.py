@@ -24,7 +24,7 @@ with open('data/annotation_FSC147_384.json') as f:
 annotations = annotations[filename]['box_examples_coordinates']
 
 result = requests.post(
-    f"http://127.0.0.1:5000/predicts",
+    f"http://localhost:5000/predict",
     files = {'file': open(f"data/images_384_VarV2/{filename}", 'rb'),
              'data': json.dumps({'annotations': annotations}) 
             },
