@@ -51,11 +51,15 @@ def color_annotation_app():
     #
     """
     )
+    
+    try:
+        bg_image = Image.open("img/annotation.jpeg")
+    except:
+        bg_image = None 
 
-    bg_image = Image.open("img/annotation.jpeg")
     image_file = st.file_uploader('Upload your image', type=['jpg', 'jpeg', 'png'], accept_multiple_files=False)
     if image_file is not None: 
-        bg_image = Image.open(image_file)
+        bg_image = Image.open(image_file).convert('RGB')
         bg_image.save('img/annotation.jpeg')
 
     label_color = (
