@@ -116,7 +116,7 @@ def count_objects():
 
 
 if __name__ == "__main__":
-    setup_image_directory()
+    # setup_image_directory()
     st.set_page_config(
         page_title="Class-agnostic Counting Model", page_icon=":pencil2:"
     )
