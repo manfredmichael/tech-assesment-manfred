@@ -4,7 +4,4 @@ WORKDIR /app
 COPY server .
 RUN pip install -r requirements.txt
 
-ENTRYPOINT [ "streamlit", "run" ]
-CMD ["app.py" ]
-
-EXPOSE 8501 
+CMD streamlit run app.py --server.port $PORT 

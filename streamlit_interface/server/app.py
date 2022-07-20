@@ -62,8 +62,6 @@ def color_annotation_app():
     image_file = st.file_uploader('Upload your image', type=['jpg', 'jpeg', 'png'], accept_multiple_files=False)
     if image_file is not None: 
         bg_image = Image.open(image_file).convert('RGB')
-        import os
-        st.write(os.listdir())
         bg_image.save('streamlit_interface/server/img/annotation.jpeg')
 
     label_color = (
@@ -121,6 +119,6 @@ if __name__ == "__main__":
     st.set_page_config(
         page_title="Class-agnostic Counting Model", page_icon=":pencil2:"
     )
-    st.title("Drawable Canvas Demo")
+    st.title("Class-agnostic Counting Demo")
     st.sidebar.subheader("Configuration")
     main()
