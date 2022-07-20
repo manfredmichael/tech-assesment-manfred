@@ -10,12 +10,6 @@ import os
 
 inference_url = 'ubuntu@ec2-108-137-44-0.ap-southeast-3.compute.amazonaws.com'
 
-def setup_image_directory():
-    response = requests.get('https://raw.githubusercontent.com/manfredmichael/tech-assesment-manfred/main/streamlit/img/annotation.jpeg')
-    img = Image.open(BytesIO(response.content))
-    os.makedirs('streamlit/img', exist_ok=True)
-    img.save('streamlit/img/annotation.jpeg')
-
 def transform_annotations(df):
     df['x1'] = df['left'] 
     df['x2'] = (df['left'] + df['width'])
@@ -45,7 +39,7 @@ def transform_scale(df, size):
 def inference(annotations):
     result = requests.post(
             f"http://{inference_url}:80/predict",
-        files = {'file': open(f"streamlit/img/annotation.jpeg", 'rb'),
+        files = {'file': open(f"streamlit_interface/server/img/annotation.jpeg", 'rb'),
                  'data': json.dumps({'annotations': annotations})
                 },
     )
@@ -55,7 +49,7 @@ def inference(annotations):
 def get_heatmap(annotations):
     result = requests.post(
             f"http://{inference_url}:80/heatmap",
-        files = {'file': open(f"streamlit/img/annotation.jpeg", 'rb'),
+        files = {'file': open(f"streamlit_interface/server/img/annotation.jpeg", 'rb'),
                  'data': json.dumps({'annotations': annotations})
                 },
     )
