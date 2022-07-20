@@ -54,7 +54,7 @@ def color_annotation_app():
     )
     
     try:
-        bg_image = Image.open("img/annotation.jpeg")
+        bg_image = Image.open("streamlit/img/annotation.jpeg")
     except:
         bg_image = None 
 
@@ -64,7 +64,7 @@ def color_annotation_app():
         bg_image = Image.open(image_file).convert('RGB')
         import os
         st.write(os.listdir())
-        bg_image.save('img/annotation.jpeg')
+        bg_image.save('streamlit/img/annotation.jpeg')
 
     label_color = (
         st.sidebar.color_picker("Annotation color: ", "#EA1010") + "77"
