@@ -12,7 +12,7 @@ import pandas as pd
 import streamlit as st
 from PIL import Image
 from streamlit_drawable_canvas import st_canvas
-from utils import setup_image_directory, transform_annotations, inference, transform_scale, get_heatmap
+from utils import transform_annotations, inference, transform_scale, get_heatmap
 
 
 
@@ -118,7 +118,6 @@ def count_objects():
 
 
 if __name__ == "__main__":
-    # setup_image_directory()
     st.set_page_config(
         page_title="Class-agnostic Counting Model", page_icon=":pencil2:"
     )
