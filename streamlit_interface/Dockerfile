@@ -7,4 +7,4 @@ RUN pip install -r requirements.txt
 ENTRYPOINT [ "streamlit", "run" ]
 CMD ["app.py" ]
 
-EXPOSE 5000
+EXPOSE 8501 
