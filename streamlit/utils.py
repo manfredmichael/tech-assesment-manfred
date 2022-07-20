@@ -6,8 +6,15 @@ from base64 import decodebytes
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
+import os
 
 inference_url = 'ubuntu@ec2-108-137-44-0.ap-southeast-3.compute.amazonaws.com'
+
+def setup_image_directory():
+    response = requests.get('https://raw.githubusercontent.com/manfredmichael/tech-assesment-manfred/main/streamlit/img/annotation.jpeg')
+    img = Image.open(BytesIO(response.content))
+    os.makedirs('img', exist_ok=True)
+    img.save('img/annotation.jpeg')
 
 def transform_annotations(df):
     df['x1'] = df['left'] 
