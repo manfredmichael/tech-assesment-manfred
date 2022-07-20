@@ -5,6 +5,6 @@ COPY server .
 RUN pip install -r requirements.txt
 
 ENTRYPOINT [ "streamlit", "run" ]
-CMD ["main.py" ]
+CMD ["app.py" ]
 
 EXPOSE 5000
