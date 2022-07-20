@@ -7,6 +7,8 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 
+inference_url = 'ubuntu@ec2-108-137-44-0.ap-southeast-3.compute.amazonaws.com'
+
 def transform_annotations(df):
     df['x1'] = df['left'] 
     df['x2'] = (df['left'] + df['width'])
@@ -35,7 +37,7 @@ def transform_scale(df, size):
 
 def inference(annotations):
     result = requests.post(
-        f"http://localhost:5000/predict",
+            f"http://{inference_url}:80/predict",
         files = {'file': open(f"img/annotation.jpeg", 'rb'),
                  'data': json.dumps({'annotations': annotations})
                 },
@@ -45,7 +47,7 @@ def inference(annotations):
 
 def get_heatmap(annotations):
     result = requests.post(
-        f"http://localhost:5000/heatmap",
+            f"http://{inference_url}:80/heatmap",
         files = {'file': open(f"img/annotation.jpeg", 'rb'),
                  'data': json.dumps({'annotations': annotations})
                 },
