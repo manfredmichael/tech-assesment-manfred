@@ -12,7 +12,7 @@ import pandas as pd
 import streamlit as st
 from PIL import Image
 from streamlit_drawable_canvas import st_canvas
-from utils import setup_image_directory, transform_annotations, inference, transform_scale, get_heatmap
+from utils import transform_annotations, inference, transform_scale, get_heatmap
 
 
 
@@ -53,15 +53,16 @@ def color_annotation_app():
     """
     )
     
-    try:
-        bg_image = Image.open("img/annotation.jpeg")
-    except:
-        bg_image = None 
+    # try:
+    #     bg_image = Image.open("img/annotation.jpeg")
+    # except:
+    #     bg_image = None 
 
+    bg_image = None 
     image_file = st.file_uploader('Upload your image', type=['jpg', 'jpeg', 'png'], accept_multiple_files=False)
     if image_file is not None: 
         bg_image = Image.open(image_file).convert('RGB')
-        bg_image.save('img/annotation.jpeg')
+        # bg_image.save('img/annotation.jpeg')
 
     label_color = (
         st.sidebar.color_picker("Annotation color: ", "#EA1010") + "77"
@@ -69,52 +70,52 @@ def color_annotation_app():
     label = st.sidebar.text_input("Label", "Default")
     mode = "transform" if st.sidebar.checkbox("Adjust ROIs", False) else "rect"
 
-    canvas_result = st_canvas(
-        fill_color=label_color,
-        stroke_width=3,
-        background_image=bg_image,
-        height=320,
-        width=512,
-        drawing_mode=mode,
-        key="color_annotation_app",
-    )
-    if canvas_result.json_data is not None:
-        df = pd.json_normalize(canvas_result.json_data["objects"])
-        df = transform_scale(df, bg_image.size)
-        n_objects = len(canvas_result.json_data['objects'])
-        if  n_objects < 3:
-            st.write('annotate at least {} more object(s)'.format(3 - n_objects))
-            pass
-        else:
-            with st.form("my_form"):
+    if bg_image:
+        canvas_result = st_canvas(
+            fill_color=label_color,
+            stroke_width=3,
+            background_image=bg_image,
+            height=320,
+            width=512,
+            drawing_mode=mode,
+            key="color_annotation_app",
+        )
+        if canvas_result.json_data is not None:
+            df = pd.json_normalize(canvas_result.json_data["objects"])
+            df = transform_scale(df, bg_image.size)
+            n_objects = len(canvas_result.json_data['objects'])
+            if  n_objects < 3:
+                st.write('annotate at least {} more object(s)'.format(3 - n_objects))
+                pass
+            else:
+                with st.form("my_form"):
 
-                # Every form must have a submit button.
-                count_button_clicked = st.form_submit_button("Count objects")
-                heatmap_button_clicked = st.form_submit_button("Show heatmaps")
-                if count_button_clicked:
-                    annotations = transform_annotations(df)
-                    prediction = inference(annotations)
-                    st.write(prediction)
-                elif heatmap_button_clicked:
-                    annotations = transform_annotations(df)
-                    prediction, heatmap = get_heatmap(annotations)
-                    st.write(f"predicted count: {prediction}")
-                    st.image(heatmap)
+                    # Every form must have a submit button.
+                    count_button_clicked = st.form_submit_button("Count objects")
+                    heatmap_button_clicked = st.form_submit_button("Show heatmaps")
+                    if count_button_clicked:
+                        annotations = transform_annotations(df)
+                        prediction = inference(annotations)
+                        st.write(prediction)
+                    elif heatmap_button_clicked:
+                        annotations = transform_annotations(df)
+                        prediction, heatmap = get_heatmap(annotations)
+                        st.write(f"predicted count: {prediction}")
+                        st.image(heatmap)
 
 
-        if len(df) == 0:
-            return
-        st.session_state["color_to_label"][label_color] = label
-        df["label"] = df["fill"].map(st.session_state["color_to_label"])
-        st.dataframe(df[["top", "left", "width", "height", "fill", "label"]])
-        # st.dataframe(df)
+            if len(df) == 0:
+                return
+            st.session_state["color_to_label"][label_color] = label
+            df["label"] = df["fill"].map(st.session_state["color_to_label"])
+            st.dataframe(df[["top", "left", "width", "height", "fill", "label"]])
+            # st.dataframe(df)
 
 def count_objects():
     st.write('bla bla')
 
 
 if __name__ == "__main__":
-    setup_image_directory()
     st.set_page_config(
         page_title="Class-agnostic Counting Model", page_icon=":pencil2:"
     )
