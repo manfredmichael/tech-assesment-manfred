@@ -12,7 +12,8 @@ I created a Flask app for model inference. Containerized the app using docker an
 
 ## Deployment Instructions
 ### Deploying Model Inference on Amazon EC2
-1. Uploading model weights to S3 Bucket
+
+#### 1. Uploading model weights to S3 Bucket
 
 Download the [bmnet+_pretained](https://www.dropbox.com/s/mr52q8kp9tp7cy9/model_best.pth?dl=0) & [resnet50](https://dl.fbaipublicfiles.com/deepcluster/swav_800ep_pretrain.pth.tar) model. Then, create a new bucket called `counting-model-bucket` and upload the model weights in this directory structure
 ```
@@ -23,7 +24,7 @@ checkpoints/
 │  ├─ swav_800ep_pretrain.pth.tar
 ```
 
-2. Create New EC2 Instance
+#### 2. Create New EC2 Instance
 
 Create a New EC2 Instance with these configurations:
 
@@ -49,7 +50,7 @@ For **Configure storage**, insert at least **12 GiB**.
 
 Then click on **Launch Instance** to launch this new instance.
 
-3. Connecting to your EC2 Instance.
+#### 3. Connecting to your EC2 Instance.
 
 First, select your newly created instance, then click **Action** and choose **Connect**.
 
@@ -63,7 +64,7 @@ Open your local terminal, and follow the instructions showed. Then, you will be 
 
 ![](https://github.com/manfredmichael/tech-assesment-mlflow-amazon-sagemaker/blob/main/assets/3.3.png?raw=true)
 
-4. Deploying the dockerized model on EC2 Instance.
+#### 4. Deploying the dockerized model on EC2 Instance.
 
 First, update the instance
 
