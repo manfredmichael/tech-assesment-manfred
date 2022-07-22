@@ -76,7 +76,11 @@ sudo apt install docker-compose
 sudo apt install awscli
 ```
 
-Clone this repository to the EC2 Instance.
+Then, configure your awscli. Insert your Acess Key & Secret Access Key, and region. For the **output format** insert **json**. You could get your Access Key from your IAM role. Make sure your IAM role has **S3 full access** permission.
+
+```aws configure```
+
+Next, clone this repository to the EC2 Instance.
 
 ```git clone https://github.com/manfredmichael/tech-assesment-manfred.git```
 
@@ -84,6 +88,34 @@ Go to the `counting_model` directory
 
 ```cd tech-assesment-manfred/counting_model```
 
+Get the model weights from your S3 Bucket
+
+```aws s3 sync s3://counting-model-bucket/checkpoints checkpoints```
+
+The `checkpoints/` folder should appear inside the `server/` directory.
+
+![](https://github.com/manfredmichael/tech-assesment-mlflow-amazon-sagemaker/blob/main/assets/4.1.png?raw=true)
+
+Before we start building the docker, create a docker group and add your user.
+
+```
+sudo groupadd docker
+sudo usermod -aG docker ${USER}
+```
+
+Then, build the docker (Note: make sure you are in `tech-assesment-manfred/counting-model/` directory).
+
+```
+docker build -t counting_model .
+```
+
+![](https://github.com/manfredmichael/tech-assesment-mlflow-amazon-sagemaker/blob/main/assets/4.2.png?raw=true)
+
+Now we can run the docker image
+
+```
+docker run --rm -p 80:80 counting_model
+```
 
 
 
