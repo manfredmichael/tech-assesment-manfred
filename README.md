@@ -48,3 +48,22 @@ For **Configure storage**, insert at least **12 GiB**.
 ![](https://github.com/manfredmichael/tech-assesment-mlflow-amazon-sagemaker/blob/main/assets/2.5.png?raw=true)
 
 Then click on **Launch Instance** to launch this new instance.
+
+3. Connecting to your EC2 Instance.
+
+First, select your newly created instance, then click **Action** and choose **Connect**.
+
+![](https://github.com/manfredmichael/tech-assesment-mlflow-amazon-sagemaker/blob/main/assets/3.1.png?raw=true)
+
+You will find the instructions on how to connect to your instance through your local terminal.
+
+![](https://github.com/manfredmichael/tech-assesment-mlflow-amazon-sagemaker/blob/main/assets/3.2.png?raw=true)
+
+Open your local terminal, and follow the instructions showed. Then, you will be connected to the instance.
+
+![](https://github.com/manfredmichael/tech-assesment-mlflow-amazon-sagemaker/blob/main/assets/3.3.png?raw=true)
+
+4. Deploying the dockerized model on EC2 Instance.
+
+
+
