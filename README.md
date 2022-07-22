@@ -65,5 +65,27 @@ Open your local terminal, and follow the instructions showed. Then, you will be 
 
 4. Deploying the dockerized model on EC2 Instance.
 
+First, update the instance
+
+```sudo apt-get update```
+
+Then, install docker-compose and awscli
+
+```
+sudo apt install docker-compose
+sudo apt install awscli
+```
+
+Clone this repository to the EC2 Instance.
+
+```git clone https://github.com/manfredmichael/tech-assesment-manfred.git```
+
+Go to the `counting_model` directory
+
+```cd tech-assesment-manfred/counting_model```
+
+
+
+
 
 
