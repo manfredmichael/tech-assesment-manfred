@@ -119,8 +119,4 @@ docker run --rm -p 80:80 counting_model
 
 ![](https://github.com/manfredmichael/tech-assesment-mlflow-amazon-sagemaker/blob/main/assets/4.3.png?raw=true)
 
-On a different terminal, now you can send a request to the flask API through your Instance public DNS.
-
-![](https://github.com/manfredmichael/tech-assesment-mlflow-amazon-sagemaker/blob/main/assets/4.3.png?raw=true)
-
 
