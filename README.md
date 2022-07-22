@@ -25,7 +25,7 @@ checkpoints/
 
 2. Create New EC2 Instance
 
-Create a New EC2 Instance with this configurations
+Create a New EC2 Instance with these configurations:
 
 For **Application and OS Images (Amazon Machine Image)**, choose **Ubuntu Server 22.04 LTS (HVM), SSD Volume Type**.
 
@@ -33,4 +33,9 @@ For **Instance type**, change the default choice to **t3.medium**.
 
 For **Key pair**, you could create new key pair if you don't have one. When you create a new one, a `.pem` file would automatically be downloaded into your device.
 
+For **Network settings**, click on Edit. Then, click on **Add security group rule**. For the new rule, set the **Type** to HTTP, and the **Source Type** to Anywhere.
+
+For **Configure storage**, insert at least **12 GiB**. 
+
+Then click on **Launch Instance** to launch this new instance.
 
