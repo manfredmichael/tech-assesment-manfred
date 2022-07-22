@@ -10,7 +10,7 @@ I created a Flask app for model inference. Containerized the app using docker an
 
 ![](https://github.com/manfredmichael/tech-assesment-mlflow-amazon-sagemaker/blob/main/assets/pipeline.png?raw=true)
 
-## Deploying Instructions
+## Deployment Instructions
 ### Deploying Model Inference on Amazon EC2
 1. Uploading model weights to S3 Bucket
 
@@ -29,13 +29,22 @@ Create a New EC2 Instance with these configurations:
 
 For **Application and OS Images (Amazon Machine Image)**, choose **Ubuntu Server 22.04 LTS (HVM), SSD Volume Type**.
 
+![](https://github.com/manfredmichael/tech-assesment-mlflow-amazon-sagemaker/blob/main/assets/2.1.png?raw=true)
+
 For **Instance type**, change the default choice to **t3.medium**.
+
+![](https://github.com/manfredmichael/tech-assesment-mlflow-amazon-sagemaker/blob/main/assets/2.2.png?raw=true)
 
 For **Key pair**, you could create new key pair if you don't have one. When you create a new one, a `.pem` file would automatically be downloaded into your device.
 
+![](https://github.com/manfredmichael/tech-assesment-mlflow-amazon-sagemaker/blob/main/assets/2.3.png?raw=true)
+
 For **Network settings**, click on Edit. Then, click on **Add security group rule**. For the new rule, set the **Type** to HTTP, and the **Source Type** to Anywhere.
+
+![](https://github.com/manfredmichael/tech-assesment-mlflow-amazon-sagemaker/blob/main/assets/2.4.png?raw=true)
 
 For **Configure storage**, insert at least **12 GiB**. 
 
-Then click on **Launch Instance** to launch this new instance.
+![](https://github.com/manfredmichael/tech-assesment-mlflow-amazon-sagemaker/blob/main/assets/2.5.png?raw=true)
 
+Then click on **Launch Instance** to launch this new instance.
