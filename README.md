@@ -1,6 +1,6 @@
 # BMNet+ Deployment with Docker and Flask
 
-Try it your self: https://manfredmichael-streamlit-interface-app-vn2ph1.streamlitapp.com/
+Try it your self: https://manfredmichael-streamlit-interface-app-vn2ph1.streamlitapp.com/ (currently suspended)
 
 ![](https://github.com/manfredmichael/tech-assesment-mlflow-amazon-sagemaker/blob/main/assets/counting-model-demo.gif?raw=true)
 
